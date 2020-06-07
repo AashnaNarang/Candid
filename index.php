@@ -1,20 +1,3 @@
-<?php  
-ini_set('mysql.connect_timeout', 300);
-ini_set('default_socket_timeout', 300);
-
- $connect = mysqli_connect("localhost", "root", "HireMePlease", "test");  
- if(isset($_POST["insert"]))  
- {  
-      $file = addslashes(file_get_contents($_FILES["image"]["tmp_name"]));  
-      $query = "INSERT INTO images(address) VALUES ('$file')";  
-      if(mysqli_query($connect, $query))  
-      {  
-           echo '<script>alert("Image Inserted into Database")</script>';  
-      }  
-      header("Location: index.php");
-      
- }  
- ?>  
  <!DOCTYPE html>  
  <html>  
       <head>  
@@ -26,60 +9,75 @@ ini_set('default_socket_timeout', 300);
       <body>  
            <br /><br />  
            <div class="container">  
-                <h3 align="center">Candid.</h3>  
+                <h2 align="center">Candid.</h3>  
                 <br />  
-                <form method="post" enctype="multipart/form-data">  
-                     <input type="file" name="image" id="image" />  
+                <form id="upload" method="post" enctype="multipart/form-data">  
+                     <input type="file" name="image[]" id="image" multiple accept=".jpg, .jpeg, .png, .gif"/>  
                      <br />  
                      <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-info" />  
                 </form>  
                 <br />  
                 <br />  
-                <table class="table table-bordered">  
-                     <tr>  
-                          <th>Images</th>  
-                     </tr>  
+                <div class="gallery" align="center">
                 <?php  
-                $query = "SELECT * FROM images ORDER BY image_id DESC";  
-				$result = mysqli_query($connect, $query); 
-				if (!$result) {
-					printf("Error: %s\n", mysqli_error($connect));
-					exit();
-				} 
-                while($row = mysqli_fetch_array($result))  
-                {  
-                     echo '  
-                          <tr>  
-                               <td>  
-                                    <img src="data:image/jpeg;base64,'.base64_encode($row['address'] ).'" height="400" width="400" />  
-                               </td>  
-                          </tr>  
-                     ';  
-                }  
-                ?>  
-                </table>  
+                ini_set('mysql.connect_timeout', 300);
+                ini_set('default_socket_timeout', 300);
+                            
+                $connect = mysqli_connect("localhost", "root", "HireMePlease", "test"); 
+                $query = "SELECT * FROM images ORDER BY image_id DESC";
+                $result = mysqli_query($connect, $query);
+                if (!$result) {
+		            printf("Error: %s\n", mysqli_error($connect));
+		            exit();
+	            } 
+                while($row = mysqli_fetch_array($result)) {  
+                    echo '  
+                        <tr>  
+                            <td>  
+                                <img src="data:image/jpeg;base64,'.base64_encode($row['address'] ).'" height="350" width="350" />  
+                            </td>  
+                        </tr>  
+                        ';  
+                } 
+                ?> 
+                </div>  
            </div>  
       </body>  
  </html>  
- <script>  
- $(document).ready(function(){  
-      $('#insert').click(function(){  
-           var image_name = $('#image').val();  
-           if(image_name == '')  
-           {  
-                alert("Please Select an Image");  
+<script>  
+$(document).ready(function(){
+
+    $('#upload').on('submit', function(event){
+        event.preventDefault();
+        var image_name = $('#image').val();
+        if(image_name == '') {
+            alert("Please select an image");
+            return false;
+        }
+        else {
+            var extension = $('#image').val().split('.').pop().toLowerCase();  
+            if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1) {  
+                alert('Invalid Image File');  
+                $('#image').val('');  
                 return false;  
-           }  
-           else  
-           {  
-                var extension = $('#image').val().split('.').pop().toLowerCase();  
-                if(jQuery.inArray(extension, ['gif','png','jpg','jpeg']) == -1)  
-                {  
-                     alert('Invalid Image File');  
-                     $('#image').val('');  
-                     return false;  
-                }  
-           }  
-      });  
- });  
- </script>  
+            }  
+            $.ajax({
+                url:"file_upload.php",
+                method:"POST",
+                data: new FormData(this),
+                contentType:false,
+                cache:false,
+                processData:false,
+                success:function(data)
+                {
+                    $('#image').val('');
+                    alert("Image(s) successfully added");
+                    location.reload();
+                }
+            });
+        }
+    });
+ 
+});  
+</script>
+ 
