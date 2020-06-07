@@ -1,8 +1,5 @@
 <?php  
-ini_set('mysql.connect_timeout', 300);
-ini_set('default_socket_timeout', 300);
-
-$connect = mysqli_connect("localhost", "root", "HireMePlease", "test");  
+include("db_connection.php");
 if(count($_FILES["image"]["tmp_name"]) > 0) {  
     $badUploads = 0;
     foreach($_FILES['image']['tmp_name'] as $val){
