@@ -2,12 +2,17 @@
 
 include('db_connection.php');
 
+function deleteQuery($value_to_delete) {
+    include('db_connection.php');
+    $query = "DELETE FROM images WHERE image_id = {$value_to_delete}";
+    $statement = $connect->prepare($query);
+    $statement->execute();
+
+}
+
 if(isset($_POST["image_id"]))
 {
-    $id = $_POST["image_id"];
-    $query = "DELETE FROM images WHERE image_id = {$id}";
-    $statement = $connect->prepare($query);
-    $statement->execute();    
+    deleteQuery($_POST["image_id"]);   
 }
 
 ?>

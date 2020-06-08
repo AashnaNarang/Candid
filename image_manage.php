@@ -130,6 +130,31 @@ $(document).ready(function(){
         }
     }); 
 
+    $('#delete_all').click(function(){
+        var checkbox = $('.delete_checkbox:checked');
+
+        if(confirm("Are you sure you want to remove selected image(s)?")) {
+            if(checkbox.length > 0) {
+                var checkbox_value = [];
+                $(checkbox).each(function(){
+                    checkbox_value.push($(this).val());
+                });
+                $.ajax({
+                    url:"delete_multiple.php",
+                    method:"POST",
+                    data:{checkbox_value:checkbox_value},
+                    success:function()
+                    {
+                        load_image_data();
+                    }   
+                });
+            }
+        } else {
+            alert("Select atleast one record to delete");
+        }
+    });
+
+
     $(document).on('click', '.edit', function(){
         var image_id = $(this).attr("id");
         $.ajax({

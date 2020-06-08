@@ -1,16 +1,12 @@
 <?php
 
-//delete.php
-
-include('database_connection.php');
+require('delete.php');
 
 if(isset($_POST["checkbox_value"]))
 {
-    for($count = 0; $count < count($_POST["checkbox_value"]); $count++)
+    foreach($_POST["checkbox_value"] as $val)
     {
-        $query = "DELETE FROM images WHERE id = '".$_POST['checkbox_value'][$count]."'";
-        $statement = $connect->prepare($query);
-        $statement->execute();
+        deleteQuery($val);
     }
 }
 ?>
