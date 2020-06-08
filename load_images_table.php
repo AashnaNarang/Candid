@@ -24,8 +24,9 @@
                     <td>'.$row["name"].'</td>
                     <td>'.$row["description"].'</td>
                     <td>
-                        <button type="button" class="btn btn-warning btn-xs edit" id="'.$row["image_id"].'">Edit</button>    
-                        <button type="button" class="btn btn-danger btn-xs delete" id="'.$row["image_id"].'" data-image_name="'.$row["name"].'">Delete</button>
+                        <button type="button" class="btn btn-warning btn-xs edit" id="'.$row["image_id"].'">Edit Info</button>
+                        <button type="button" class="btn btn-info btn-xs replace" id="'.$row["image_id"].'">Replace Image</button>    
+                        <button type="button" class="btn btn-danger btn-xs delete" id="'.$row["image_id"].'">Delete</button>
                     </td>
                 </tr>
             ';
