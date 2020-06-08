@@ -11,17 +11,13 @@
       <body>  
            <br /><br />  
            <div class="container">  
-                <h2 align="center">Candid.</h3>  
+                <h2 align="center">Candid.</h2>  
                 <br />  
                 <div class="topnav" align="center">
                     <a href="index.php">Gallery</a>
                     <a class="active" href="image_manage.php">Image Management</a>
                 </div>
-                <form id="upload" method="post" enctype="multipart/form-data">  
-                     <input type="file" name="image[]" id="image" multiple accept=".jpg, .jpeg, .png, .gif"/>  
-                     <br />  
-                     <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-info" />  
-                </form>
+                <button type="button" name="add" id="add" class="btn btn-success">Add</button>
                 <button type="button" name="delete_all" id="delete_all" class="btn btn-danger">Delete All Selected</button>
                 <br />  
                 <br />
@@ -30,15 +26,16 @@
     </body>
 </html>
 
-<div id="imageModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+<!-- TODO: Re-use modal code -->
+<div id="infoModal" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="modal_dialog">
         <div class="modal-content">
-        <form method="POST" id="edit_image_form">
+        <form method="post" id="edit_image_form">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Image Details</h4>
+                <h4 class="modal-title">Edit Image Info</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="edit_info">
                 <div class="form-group">
                     <label>Image Name</label>
                     <input type="text" name="name" id="name" class="form-control" />
@@ -49,8 +46,34 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="hidden" name="image_id" id="image_id" />
-                <input type="submit" name="submit" class="btn btn-info" value="Save" />
+                <input type="hidden" name="img_id" id="img_id" />
+                <input type="submit" name="save" id="save" class="btn btn-info" value="Save" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="modal fade" role="dialog">
+    <div class="modal-dialog>
+        <div class="modal-content">
+        <form method="POST" id="image_form">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Image</h4>
+            </div>
+            <div class="modal-body" id="edit_image">
+                <form id="image_form" method="post" enctype="multipart/form-data">
+                    <p><label>Select Image</label>
+                        <input type="file" name="image[]" id="image" multiple accept=".jpg, .jpeg, .png, .gif" />
+                    </p>
+                    <br />
+                    <input type="hidden" name="image_id" id="image_id" />
+                    <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-info" />
+                </form>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </form>
@@ -71,8 +94,8 @@ $(document).ready(function(){
                 $('#image_table').html(data);
             }
         });
-    } 
-
+    }
+     
     function validate_image() {
         var image_name = $('#image').val();
         if(image_name == '') {
@@ -91,10 +114,14 @@ $(document).ready(function(){
         } 
     }
 
-    
-    $('#upload').on('submit', function(event){
+    $('#add').click(function(){
+        $('#imageModal').modal('show');
+        $('#image_form')[0].reset();
+        $('#image_id').val('');
+    });
+
+    $('#image_form').submit(function(event){
         event.preventDefault();
-        var image_name = $('#image').val();
         if(validate_image()) {
             $.ajax({
                 url:"file_upload.php",
@@ -105,8 +132,9 @@ $(document).ready(function(){
                 processData:false,
                 success:function(data)
                 {
-                    $('#image').val('');
                     alert("Image(s) successfully added");
+                    $('#image_form')[0].reset();
+                    $('#imageModal').modal('hide');
                     load_image_data();
                 }
             });
@@ -116,7 +144,6 @@ $(document).ready(function(){
     $(document).on('click', '.delete', function(){
         var image_id = $(this).attr("id");
         var image_name = $(this).data("image_name");
-        console.log(image_id);
         if(confirm("Are you sure you want to remove this image?")) {
             $.ajax({
                 url:"delete.php",
@@ -164,33 +191,17 @@ $(document).ready(function(){
             dataType:"json",
             success:function(data)
             {
-                $('#image_id').val(image_id);
-                $('#image_name').val(data.image_name);
-                $('#image_description').val(data.image_description);
+                $('#infoModal').modal('show');
+                $('#img_id').val(image_id);
+                $('#name').val(data.image_name);
+                $('#description').val(data.image_description);
                 $('.modal-title').text("Update Information");
-                $('#imageModal').modal('show');
-            }
-        });
-    });
-
-    $(document).on('click', '.save', function(){
-        var image_id = $(this).attr("id");
-        $.ajax({
-            url:"edit.php",
-            method:"POST",
-            data:{image_id:image_id},
-            dataType:"json",
-            success:function(data)
-            {
-                $('#imageModal').modal('show');
-                $('#image_id').val(image_id);
-                $('#image_name').val(data.image_name);
-                $('#image_description').val(data.image_description);
+                
             }
         });
     }); 
 
-    $('#edit_image_form').on('submit', function(event){
+    $('#edit_image_form').submit(function(event){
         event.preventDefault();
         $.ajax({
             url:"update.php",
@@ -198,12 +209,12 @@ $(document).ready(function(){
             data:$('#edit_image_form').serialize(),
             success:function(data)
             {
-                $('#imageModal').modal('hide');
+                $('#infoModal').modal('hide');
                 load_image_data();
-                alert('Image Details updated');
+                alert('Image Info updated');
             }
         });
-    }); 
+    });
 
 });  
 </script>

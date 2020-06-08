@@ -11,7 +11,7 @@
       <body>  
            <br /><br />  
            <div class="container">  
-                <h2 align="center">Candid.</h3>  
+                <h2 align="center">Candid.</h2>  
                 <br />
                 <!-- TODO figure out how to reuse the code -->
                 <div class="topnav" align="center">
