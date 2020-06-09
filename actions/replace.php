@@ -1,5 +1,5 @@
 <?php  
-include("db_connection.php");
+include("../config/db_connection.php");
 if(isset($_POST["image_id"])){
     if(count($_FILES["image"]["tmp_name"]) == 1) {  
         $file = addslashes(file_get_contents($_FILES['image']['tmp_name'][0]));

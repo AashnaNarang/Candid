@@ -1,6 +1,6 @@
 <?php  
     include("load_images.php");
-    include('start_session.php');
+    include('../config/start_session.php');
 
     if(isset($_SESSION["username"])) {
         $output = load_images_by_user($_SESSION["username"]);

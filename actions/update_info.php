@@ -1,6 +1,6 @@
 <?php
 
-include('db_connection.php');
+include('../config/db_connection.php');
 if(isset($_POST["img_id"]))
 {
     $query = "

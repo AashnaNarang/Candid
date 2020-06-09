@@ -6,8 +6,8 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     exit;
 }
  
-include('db_connection.php');
-require("validate.php");
+include('../config/db_connection.php');
+require("../actions/helpers/validate.php");
  
 $username = $password = "";
 $username_err = $password_err = "";
@@ -77,7 +77,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Login">
             </div>
-            <p>Don't have an account? <a href="register.php">Sign up now</a>.</p>
+            <p>Don't have an account? <a href="../pages/register.php">Sign up now</a>.</p>
         </form>
     </div>
 </body>

@@ -1,5 +1,5 @@
 <?php
-include('start_session.php');
+include('../config/start_session.php');
 ?>
  <!DOCTYPE html> 
 
@@ -16,16 +16,8 @@ include('start_session.php');
                 <div class="page-header" align="right">
                     <h5>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b></h5>
                     <a type="button" class="btn btn-danger btn-xs logout" href="logout.php">Log Out</a>
-                    <h2 align="center"><b>Candid.</b></h2> 
                 </div>
-                <?php
-                    if(isset($_GET["username"])) {
-                        $viewing = $_GET["username"];
-                        echo "<h3 align='center'>{$viewing}'s Gallery.</h3>";
-                    } else {
-                        echo "Uh oh. Looks like there is an issue with this user";
-                    }
-                ?>
+                <h2 align="center"><b>Candid.</b></h2>  
                 <br />
                 <!-- TODO figure out how to reuse the code -->
                 <div class="topnav" align="center">
@@ -35,28 +27,32 @@ include('start_session.php');
                 </div> 
                 <br />  
                 <br />  
-                
                 <div class="gallery" align="center">
                 <?php  
-                include("load_images.php");
-                $output = load_images_by_user($viewing);
-                $result = $output['result'];
-                $numRows = $output['numRows'];
-                if ($numRows > 0) {
-                    foreach($result as $row) {
-                            echo '  
-                                <tr>  
-                                    <td>  
-                                        <img src="data:image/jpeg;base64,'.base64_encode($row['address'] ).'" height="350" width="350" />  
-                                    </td>  
-                                </tr>  
-                            ';  
-                        }
+                include("../actions/load_images.php");
+                if(isset($_SESSION["username"])) {
+                    $output = load_images_by_user($_SESSION["username"]);
+                    $result = $output['result'];
+                    $numRows = $output['numRows'];
+                
+                    if ($numRows > 0) {
+                        foreach($result as $row) {
+                                echo '  
+                                    <tr>  
+                                        <td>  
+                                            <img src="data:image/jpeg;base64,'.base64_encode($row['address'] ).'" height="350" width="350" />  
+                                        </td>  
+                                    </tr>  
+                                ';  
+                            }
+                    } else {
+                        echo 'Uh oh! Looks like your gallery is empty. Go to Image Management to add pictures.';
+                    }
                 } else {
-                    echo "Uh oh! Looks like {$viewing}'s gallery is empty. Try again later.";
+                    echo 'Looks like there is a problem with your account. Try logging out and logging in again.';
                 }
                 ?> 
-            </div>  
-        </div>  
+                </div>  
+           </div>  
       </body>  
  </html>  

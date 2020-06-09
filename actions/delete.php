@@ -1,9 +1,9 @@
 <?php
 
-include('db_connection.php');
+include('../config/db_connection.php');
 
 function deleteQuery($value_to_delete) {
-    include('db_connection.php');
+    include('../config/db_connection.php');
     $query = "DELETE FROM images WHERE image_id = {$value_to_delete}";
     $statement = $connect->prepare($query);
     $statement->execute();

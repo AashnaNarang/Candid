@@ -1,14 +1,13 @@
 <?php  
-include("db_connection.php");
-include('start_session.php');
+include("../config/db_connection.php");
+include('../config/start_session.php');
 
 if(count($_FILES["image"]["tmp_name"]) > 0) {  
     $badUploads = 0;
     foreach($_FILES['image']['tmp_name'] as $val){
         $filename = addslashes(file_get_contents($val));
         if(isset($_SESSION["username"])) {
-            $query = "INSERT INTO images(address, username) VALUES ('$filename', '".$_SESSION["username"]."')"; 
-            file_put_contents("logs.txt", $query); 
+            $query = "INSERT INTO images(address, username) VALUES ('$filename', '".$_SESSION["username"]."')";  
             $statement = $connect->prepare($query);
             $success = $statement->execute();
             if(!$success) {

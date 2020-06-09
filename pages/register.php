@@ -1,7 +1,7 @@
 <?php
 
-include('db_connection.php');
-require("validate.php");
+include('../config/db_connection.php');
+require("../actions/helpers/validate.php");
 
 $user = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";

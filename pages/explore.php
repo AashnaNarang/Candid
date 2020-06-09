@@ -1,8 +1,12 @@
 <?php
-include('start_session.php');
+include('../config/start_session.php');
 function load_users() {
-    include("db_connection.php");
-    $query = "SELECT username FROM users ORDER BY username ASC";
+    include("../config/db_connection.php");
+    if (isset($_SESSION["username"])) {
+        $query = "SELECT username FROM users WHERE username NOT IN ('".$_SESSION["username"]."') ORDER BY username ASC";
+    } else {
+        $query = "SELECT username FROM users ORDER BY username ASC";
+    }    
     $statement = $connect->prepare($query);
     $statement->execute();
     $output['result'] = $statement->fetchAll();
@@ -23,7 +27,7 @@ function load_users() {
         <body>  
            <div class="container">  
                 <div class="page-header" align="right">
-                    <h5>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b></h5>
+                    <h5>Hi, <b><?php if(isset($_SESSION["username"])) echo htmlspecialchars($_SESSION["username"]); ?></b></h5>
                     <a type="button" class="btn btn-danger btn-xs logout" href="logout.php">Log Out</a>
                 </div>
                 <h2 align="center"><b>Candid.</b></h2>  
@@ -48,7 +52,7 @@ function load_users() {
                             echo '  
                                 <tr>  
                                     <td>  
-                                        <a href="'.$url.'"><img src="images/blank_picture.png" height="350" width="350" /> </a>
+                                        <a href="'.$url.'"><img src="../images/blank_picture.png" height="350" width="350" /> </a>
                                     </td> 
                                 </tr>  
                             ';  

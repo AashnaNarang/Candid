@@ -1,5 +1,5 @@
 <?php
-include('start_session.php');
+include('../config/start_session.php');
 ?>
 <!DOCTYPE html>  
  <html>  
@@ -97,7 +97,7 @@ $(document).ready(function(){
 
     function load_image_data() {
         $.ajax({
-            url:"load_images_table.php",
+            url:"../actions/load_images_table.php",
             method:"POST",
             success:function(data) {
                 $('#image_table').html(data);
@@ -135,9 +135,9 @@ $(document).ready(function(){
         event.preventDefault();
         var action = document.getElementById('action').getAttribute('value');
         if(action == "insert") {
-            url = "file_upload.php";
+            url = "../actions/file_upload.php";
         } else if(action == "replace") {
-            url = "replace.php";
+            url = "../actions/replace.php";
         }
         if(validate_image()) {
             $.ajax({
@@ -163,7 +163,7 @@ $(document).ready(function(){
         var image_name = $(this).data("image_name");
         if(confirm("Are you sure you want to remove this image?")) {
             $.ajax({
-                url:"delete.php",
+                url:"../actions/delete.php",
                 method:"POST",
                 data:{image_id:image_id, image_name:image_name},
                 success:function(data) {
@@ -184,7 +184,7 @@ $(document).ready(function(){
                     checkbox_value.push($(this).val());
                 });
                 $.ajax({
-                    url:"delete_multiple.php",
+                    url:"../actions/delete_multiple.php",
                     method:"POST",
                     data:{checkbox_value:checkbox_value},
                     success:function()
@@ -202,7 +202,7 @@ $(document).ready(function(){
     $(document).on('click', '.edit', function(){
         var image_id = $(this).attr("id");
         $.ajax({
-            url:"edit.php",
+            url:"../actions/edit.php",
             method:"POST",
             data:{image_id:image_id},
             dataType:"json",
@@ -221,7 +221,7 @@ $(document).ready(function(){
     $('#edit_image_form').submit(function(event){
         event.preventDefault();
         $.ajax({
-            url:"update_info.php",
+            url:"../actions/update_info.php",
             method:"POST",
             data:$('#edit_image_form').serialize(),
             success:function(data)
