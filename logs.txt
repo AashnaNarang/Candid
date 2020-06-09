@@ -1,1 +1,1 @@
-SELECT user_id, username, password FROM users WHERE username = 'aashna'
+view_user.php?username=klok
