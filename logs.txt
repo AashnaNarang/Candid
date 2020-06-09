@@ -1,1 +1,1 @@
-52
+INSERT INTO images(address) VALUES ('')

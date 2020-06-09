@@ -1,7 +1,6 @@
 <?php
 
 include('db_connection.php');
-file_put_contents("logs.txt", $_POST["img_id"]);
 if(isset($_POST["img_id"]))
 {
     $query = "

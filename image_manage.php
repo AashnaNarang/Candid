@@ -71,6 +71,7 @@
                     <br />
                     <input type="hidden" name="image_id" id="image_id" />
                     <input type="submit" name="insert" id="insert" value="Insert" class="btn btn-info" />
+                    <input type="hidden" name="action" id="action" value="insert" />
                 </form>
             </div>
             <div class="modal-footer">
@@ -117,14 +118,22 @@ $(document).ready(function(){
     $('#add').click(function(){
         $('#imageModal').modal('show');
         $('#image_form')[0].reset();
+        $('.modal-title').text("Add Image");
         $('#image_id').val('');
+        $('#action').val("insert");
     });
 
     $('#image_form').submit(function(event){
         event.preventDefault();
+        var action = document.getElementById('action').getAttribute('value');
+        if(action == "insert") {
+            url = "file_upload.php";
+        } else if(action == "replace") {
+            url = "replace.php";
+        }
         if(validate_image()) {
             $.ajax({
-                url:"file_upload.php",
+                url: url,
                 method:"POST",
                 data: new FormData(this),
                 contentType:false,
@@ -132,10 +141,10 @@ $(document).ready(function(){
                 processData:false,
                 success:function(data)
                 {
-                    alert("Image(s) successfully added");
                     $('#image_form')[0].reset();
                     $('#imageModal').modal('hide');
                     load_image_data();
+                    alert(data);
                 }
             });
         }
@@ -204,7 +213,7 @@ $(document).ready(function(){
     $('#edit_image_form').submit(function(event){
         event.preventDefault();
         $.ajax({
-            url:"update.php",
+            url:"update_info.php",
             method:"POST",
             data:$('#edit_image_form').serialize(),
             success:function(data)
@@ -215,6 +224,14 @@ $(document).ready(function(){
             }
         });
     });
+
+    $(document).on('click', '.replace', function() {
+        $('#image_form')[0].reset();
+        $('#image_id').val($(this).attr("id"));
+        $('.modal-title').text("Replace Image");
+        $('#action').val("replace");
+        $('#imageModal').modal('show');
+    }); 
 
 });  
 </script>

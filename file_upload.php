@@ -11,10 +11,10 @@ if(count($_FILES["image"]["tmp_name"]) > 0) {
             $badUploads = $badUploads + 1;
         }
     }
-    if($badUploads = 0) {  
-        echo '<script>alert("Image(s) uploaded successfully")</script>';  
+    if($badUploads == 0) {  
+        echo "Image(s) uploaded successfully";  
     } else {
-        echo '<script>alert("Image(s) failed to upload")</script>';    
+        echo "Image(s) failed to upload";    
     }
 }
 ?> 
