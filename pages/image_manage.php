@@ -54,9 +54,9 @@ include('../config/start_session.php');
 </div>
 
 <div id="imageModal" class="modal fade" role="dialog">
-    <div class="modal-dialog>
+    <div class="modal-dialog">
         <div class="modal-content">
-        <form method="POST" id="image_form">
+        <form method="post" id="image_form">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add Image</h4>
