@@ -1,6 +1,8 @@
 <?php
 
 include('../config/db_connection.php');
+require('helpers/execute_query.php');
+
 if(isset($_POST["img_id"]))
 {
     $query = "
@@ -8,8 +10,7 @@ if(isset($_POST["img_id"]))
         SET name = '".$_POST["name"]."', description = '".$_POST["description"]."' 
         WHERE image_id = '".$_POST["img_id"]."'
     ";
-    $statement = $connect->prepare($query);
-    $statement->execute();
+    execute_query($query);
 }
 
 ?>

@@ -27,7 +27,6 @@ include('../config/start_session.php');
                     }
                 ?>
                 <br />
-                <!-- TODO figure out how to reuse the code -->
                 <div class="topnav" align="center">
                     <a href="index.php">Gallery</a>
                     <a class="active" href="image_manage.php">Image Management</a>
@@ -38,23 +37,9 @@ include('../config/start_session.php');
                 
                 <div class="gallery" align="center">
                 <?php  
-                include("../actions/load_images.php");
-                $output = load_images_by_user($viewing);
-                $result = $output['result'];
-                $numRows = $output['numRows'];
-                if ($numRows > 0) {
-                    foreach($result as $row) {
-                            echo '  
-                                <tr>  
-                                    <td>  
-                                        <img src="data:image/jpeg;base64,'.base64_encode($row['address'] ).'" height="350" width="350" />  
-                                    </td>  
-                                </tr>  
-                            ';  
-                        }
-                } else {
-                    echo "Uh oh! Looks like {$viewing}'s gallery is empty. Try again later.";
-                }
+                    include('../actions/create_gallery.php');
+                    $error = "Uh oh! Looks like {$viewing}'s gallery is empty. Try again later.";
+                    create_gallery($viewing, $error);
                 ?> 
             </div>  
         </div>  

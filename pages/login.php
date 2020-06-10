@@ -1,51 +1,5 @@
 <?php
-session_start();
-
-if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: index.php");
-    exit;
-}
- 
-include('../config/db_connection.php');
-require("../actions/helpers/validate.php");
- 
-$username = $password = "";
-$username_err = $password_err = "";
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
- 
-    checkEmptyAndTrim($_POST["username"], $username_err, "a username", $username);
-    checkEmptyAndTrim($_POST["password"], $password_err, "a password", $password);
-    
-    if (empty($username_err) && empty($password_err)) {
-        $sql = "SELECT user_id, username, password FROM users WHERE username = '{$username}'";
-        file_put_contents("logs.txt", $sql);
-        $stmt = $connect->prepare($sql);
-        if ($stmt->execute() && ($stmt->rowCount() == 1)) {
-            if ($row = $stmt->fetch()){
-                $id = $row["id"];
-                $username = $row["username"];
-                $hashed_password = $row["password"];
-                if(password_verify($password, $hashed_password)) {
-                    // Password is correct, so start a new session
-                    session_start();
-                    $_SESSION["loggedin"] = true;
-                    $_SESSION["id"] = $id;
-                    $_SESSION["username"] = $username;                            
-                    header("location: index.php");
-                } else {
-                    $password_err = "The password you entered was not valid.";
-                }
-            }
-            unset($stmt);
-        } else {
-            $username_err = "No account found with that username.";
-        }
-    } else {
-        echo "Oops! Something went wrong. Please try again later.";
-    }
-    unset($connect);
-}
+    require("../actions/validate_login.php");
 ?>
  
 <!DOCTYPE html>
