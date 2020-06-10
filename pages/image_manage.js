@@ -99,9 +99,9 @@ $(document).ready(function(){
                         load_image_data();
                     }   
                 });
+            } else {
+                alert("Select atleast one record to delete");
             }
-        } else {
-            alert("Select atleast one record to delete");
         }
     });
 
